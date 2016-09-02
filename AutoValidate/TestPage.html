@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>AutoValidate</title>
+	<meta charset="utf-8" />
+    <link href="Content/autoValidate-modal.css" rel="stylesheet" />
+    <script src="Scripts/autoValidate-modal.js"></script>
+    <script src="Scripts/autoValidate.js"></script>
+</head>
+<body>
+
+    <div style="width: 100%; height: 800px;">
+
+        <input type="text" placeholder="first name" name="first name" data-av="" /><br />
+        <input type="text" placeholder="last name" name="last name" data-av="" data-av-message="my custom message" /><br />
+
+        <input type="button" id="btnSubmit" value="Submit" data-av="" />
+    </div>
+
+
+    <script type="text/javascript">
+
+        window.onload = function ()
+        {
+            autoValidate.init("form1");
+        }
+
+    </script>
+</body>
+
+</html>
