@@ -3,6 +3,7 @@
 
 var autoValidate =
 {
+    validationMessage: "",
 
     init: function (formId)
     {
@@ -15,6 +16,8 @@ var autoValidate =
                 buttons[i].addEventListener("click", function (e)
                 {
                     autoValidate.checkInputs();
+                    autoValidate.checkDropdowns();
+                    autoValidate.showValidationModal();
                 });
             }
         }
@@ -23,25 +26,36 @@ var autoValidate =
     checkInputs: function ()
     {
         var inputs = document.querySelectorAll("input[type=text]");
-        var msg = "";
+        this.checkElements(inputs);
+    },
+
+    checkDropdowns: function()
+    {
+        var inputs = document.querySelectorAll("select");
+        this.checkElements(inputs);
+    },
+
+    checkElements: function(inputs)
+    {
         var isFirstFind = false;
+        var msg = "";
 
         for (var i = 0; i <= inputs.length - 1; i++)
         {
             if (inputs[i].hasAttribute("data-av"))
             {
-                if (inputs[i].value == "")
+                if (inputs[i].value == "" || inputs[i].selectedIndex == 0)
                 {
                     if (inputs[i].hasAttribute("data-av-message"))
                     {
-                        msg += inputs[i].getAttribute("data-av-message");
-                        console.log(msg);
+                        msg += inputs[i].getAttribute("data-av-message") + "</br>";
+                        //console.log(msg);
                     }
                     else
                     {
                         var elementName = inputs[i].getAttribute("name");
-                        msg += "Please enter a value for " + elementName + "\n";
-                        console.log(msg);
+                        msg += "Please select a value for " + elementName + "</br>";
+                        //console.log(msg);
                     }
 
                     this.addBackgroundColor(inputs[i]);
@@ -58,15 +72,23 @@ var autoValidate =
 
         if (msg != "")
         {
-           var modal = new Modal({
-                content: "<p>" + msg +  "</p>" ,
+            this.validationMessage += msg;
+        }
+
+    },
+
+    showValidationModal: function()
+    {
+        if (this.validationMessage != "")
+        {
+            var modal = new Modal({
+                content: "<p>" + this.validationMessage + "</p>",
                 maxWidth: 600,
                 overlay: false
             });
 
             modal.open();
         }
-
     },
 
     addBackgroundColor: function (ele)
