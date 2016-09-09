@@ -15,8 +15,10 @@ var autoValidate =
             {
                 buttons[i].addEventListener("click", function (e)
                 {
-                    autoValidate.checkInputs();
+
                     autoValidate.checkDropdowns();
+                    autoValidate.checkRadioButtons();
+                    autoValidate.checkInputs();
                     autoValidate.showValidationModal();
                 });
             }
@@ -29,13 +31,79 @@ var autoValidate =
         this.checkElements(inputs);
     },
 
-    checkDropdowns: function()
+    checkDropdowns: function ()
     {
         var inputs = document.querySelectorAll("select");
         this.checkElements(inputs);
     },
 
-    checkElements: function(inputs)
+    checkRadioButtons: function ()
+    {
+        var radioButtons = document.querySelectorAll("input[type=radio]"); // get all radio buttons
+        var radioNames = []; // store unique names of radio buttons
+
+
+        radioButtons.forEach(function (radio)
+        {
+            if (radio.hasAttribute("data-av"))
+            {
+                if (radioNames.indexOf(radio.getAttribute("name")) > -1)
+                {
+                    // radiobutton name already added
+                }
+                else
+                {
+                    radioNames.push(radio.getAttribute("name"));
+                }
+            }
+        });
+
+        radioNames.forEach(function (radioName)
+        {
+            var radiosByGroup = document.getElementsByName(radioName);
+            var checkedValue = getCheckedValue(radioName);
+            var msg = "";
+
+            if (checkedValue == null)
+            {
+                if (radiosByGroup[0].attributes.getNamedItem("data-av-message") != null)
+                {
+                    //console.log(radiosByGroup[0]);
+                    msg += radiosByGroup[0].getAttribute("data-av-message");
+                }
+                else
+                {
+                    msg += "Please select a radio button for " + radioName;
+                }
+
+                autoValidate.addBackgroundColor(radiosByGroup[0]);
+                autoValidate.removeBackgroundColor(radiosByGroup[0], this.modal);
+            }
+
+            if (msg != "")
+            {
+                this.validationMessage += msg;
+            }
+
+        });
+
+        function getCheckedValue(groupName)
+        {
+            var radios = document.getElementsByName(groupName);
+            for (i = 0; i < radios.length; i++)
+            {
+                if (radios[i].checked)
+                {
+                    return radios[i].value;
+                }
+            }
+            return null;
+        }
+
+        // this.checkElements(inputs);
+    },
+
+    checkElements: function (inputs)
     {
         var isFirstFind = false;
         var msg = "";
@@ -77,7 +145,7 @@ var autoValidate =
 
     },
 
-    showValidationModal: function()
+    showValidationModal: function ()
     {
         if (this.validationMessage != "")
         {
@@ -88,21 +156,55 @@ var autoValidate =
             });
 
             modal.open();
+            autoValidate.validationMessage = "";
         }
     },
 
     addBackgroundColor: function (ele)
     {
-        ele.className += " autoValidate";
+        if (ele.getAttribute("type") == "radio")
+        {
+            ele.parentElement.className += " autoValidate-pulse";
+        }
+        else
+        {
+            ele.className += " autoValidate";
+        }
+
     },
 
     removeBackgroundColor: function (ele, modal)
     {
-        ele.onkeyup = function ()
+
+        if (ele.nodeName.toLowerCase() === "select")
         {
-            ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');          
-            document.querySelector(".autoValidate-modal").style.display = "none";
-        };
+            ele.onmouseover = function ()
+            {
+                ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+            }
+        }
+        else
+        {
+
+            if (ele.getAttribute("type") == "text")
+            {
+                ele.onmouseover = function ()
+                {
+                    ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+                    document.querySelector(".autoValidate-modal").style.display = "none";
+                };
+            }
+            else if (ele.getAttribute("type") == "radio")
+            {
+                ele.parentElement.onmouseover = function ()
+                {
+                    ele.parentElement.className = ele.parentElement.className.replace(/(?:^|\s)autoValidate-pulse(?!\S)/g, '');
+                    document.querySelector(".autoValidate-modal").style.display = "none";
+                };
+            }
+        }
+
+
     }
 
 };

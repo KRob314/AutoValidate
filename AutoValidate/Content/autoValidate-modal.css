@@ -1,4 +1,18 @@
-﻿.autoValidate {background-color: #e57619;}
+﻿.autoValidate { background-color: #e57619; }
+.autoValidate-radio { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+.autoValidate-pulse {
+  animation: pulse 2s 2;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #c06315;
+  }
+  100% {
+    background-color: #e57619;
+  }
+}
 
 /* Modal Base CSS */
 .autoValidate-overlay
