@@ -103,7 +103,6 @@ var autoValidate =
 
     checkElements: function (inputs)
     {
-        var isFirstFind = false;
         var msg = "";
 
         for (var i = 0; i <= inputs.length - 1; i++)
@@ -115,23 +114,18 @@ var autoValidate =
                     if (inputs[i].hasAttribute("data-av-message"))
                     {
                         msg += inputs[i].getAttribute("data-av-message") + "</br>";
-                        //console.log(msg);
                     }
                     else
                     {
                         var elementName = inputs[i].getAttribute("name");
                         msg += "Please select a value for " + elementName + "</br>";
-                        //console.log(msg);
                     }
 
                     this.addBackgroundColor(inputs[i]);
                     this.removeBackgroundColor(inputs[i], this.modal);
-
-                    if (isFirstFind == false)
-                    {
-                        isFirstFind = true;
-                        inputs[i].focus();
-                    }
+                    
+                    if (document.querySelector(".autoValidate"))
+                        document.querySelector(".autoValidate").focus();
                 }
             }
         }
