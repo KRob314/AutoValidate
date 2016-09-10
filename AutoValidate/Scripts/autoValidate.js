@@ -15,7 +15,6 @@ var autoValidate =
             {
                 buttons[i].addEventListener("click", function (e)
                 {
-
                     autoValidate.checkDropdowns();
                     autoValidate.checkRadioButtons();
                     autoValidate.checkInputs();
@@ -41,7 +40,6 @@ var autoValidate =
     {
         var radioButtons = document.querySelectorAll("input[type=radio]"); // get all radio buttons
         var radioNames = []; // store unique names of radio buttons
-
 
         radioButtons.forEach(function (radio)
         {
@@ -170,28 +168,26 @@ var autoValidate =
         {
             ele.className += " autoValidate";
         }
-
     },
 
     removeBackgroundColor: function (ele, modal)
     {
-
         if (ele.nodeName.toLowerCase() === "select")
         {
             ele.onmouseover = function ()
             {
                 ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+                hideModal();
             }
         }
         else
         {
-
             if (ele.getAttribute("type") == "text")
             {
                 ele.onmouseover = function ()
                 {
                     ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
-                    document.querySelector(".autoValidate-modal").style.display = "none";
+                    hideModal();
                 };
             }
             else if (ele.getAttribute("type") == "radio")
@@ -199,13 +195,18 @@ var autoValidate =
                 ele.parentElement.onmouseover = function ()
                 {
                     ele.parentElement.className = ele.parentElement.className.replace(/(?:^|\s)autoValidate-pulse(?!\S)/g, '');
-                    document.querySelector(".autoValidate-modal").style.display = "none";
+                    console.log(document.querySelectorAll(".autoValidate-modal"));
+                    hideModal();
                 };
             }
         }
 
-
+        function hideModal()
+        {
+            var avModal = document.querySelector(".autoValidate-modal");
+            if(avModal != null)
+                avModal.remove();
+        }
     }
-
 };
 
