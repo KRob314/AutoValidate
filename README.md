@@ -2,6 +2,11 @@
 
 Javascript library for auto-validating element values and displaying a toast like notification for validation messages.  
 
+##Supported elements 
+•	Text input
+•	Radio buttons
+•	Dropdown
+
 ##How to Use
 To require a value, add a `data-av` attribute
 ```html
