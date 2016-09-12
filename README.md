@@ -11,4 +11,4 @@ Javascript library for auto-validating text inputs and displaying a toast like n
 * `nummber`: check for numeric value
 * `email`: check for valid email (regex test for string@string.string)
 * `url:` checks for valid url 
-* `card`: check for valid credit card format
+
