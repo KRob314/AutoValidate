@@ -67,21 +67,18 @@ var autoValidate =
                 if (radiosByGroup[0].attributes.getNamedItem("data-av-message") != null)
                 {
                     //console.log(radiosByGroup[0]);
-                    msg += radiosByGroup[0].getAttribute("data-av-message");
+                    msg += radiosByGroup[0].getAttribute("data-av-message") + "</br>";
                 }
                 else
                 {
-                    msg += "Please select a radio button for " + radioName;
+                    msg += "Please select a radio button for " + radioName + "</br>";
                 }
 
                 autoValidate.addBackgroundColor(radiosByGroup[0]);
                 autoValidate.removeBackgroundColor(radiosByGroup[0], this.modal);
             }
 
-            if (msg != "")
-            {
-                this.validationMessage += msg;
-            }
+            autoValidate.validationMessage += msg;
 
         });
 
@@ -109,32 +106,118 @@ var autoValidate =
         {
             if (inputs[i].hasAttribute("data-av"))
             {
+                var avRule = getValidationRule(inputs[i].getAttribute("data-av"));
+
+                if (avRule != "")
+                    checkValidationRule(avRule, inputs[i]);
+
                 if (inputs[i].value == "" || inputs[i].selectedIndex == 0)
                 {
-                    if (inputs[i].hasAttribute("data-av-message"))
-                    {
-                        msg += inputs[i].getAttribute("data-av-message") + "</br>";
-                    }
-                    else
-                    {
-                        var elementName = inputs[i].getAttribute("name");
-                        msg += "Please select a value for " + elementName + "</br>";
-                    }
+                    msg += autoValidate.addValidationMessage(inputs[i], avRule);
 
                     this.addBackgroundColor(inputs[i]);
                     this.removeBackgroundColor(inputs[i], this.modal);
-                    
+
                     if (document.querySelector(".autoValidate"))
                         document.querySelector(".autoValidate").focus();
                 }
             }
         }
 
-        if (msg != "")
+        this.validationMessage += msg;
+
+        function getValidationRule(attributeValue)
         {
-            this.validationMessage += msg;
+            var rules = ["number", "email", "between"];
+            if (rules.indexOf(attributeValue) > -1)
+                return attributeValue
+            else
+                return ""
         }
 
+        function checkValidationRule(rule, element, ruleValue)
+        {
+            var isValid = true;
+
+            switch (rule.toLowerCase())
+            {
+                case "number":
+                    isValid = isNumeric(element.value);
+                    break;
+                case "email":
+                    isValid = isEmail(element.value)
+                    break;
+                case "url":
+                    isValid = isURL(element.value);
+                    break;
+                case "between":
+                    isValid = isBetween(ruleValue);
+                    break;
+            }
+
+            function isNumeric(n)
+            {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+
+            function isEmail(email)
+            {
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            }
+
+            function isURL(str)
+            {
+                var re = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
+                return re.test(str);
+            }
+
+            function isBetween(valueBetween, elementValue)
+            {
+
+            }
+
+            if (isValid === false)
+            {
+                autoValidate.addValidationMessage(element, rule);
+            }
+
+            return isValid;
+        }
+
+    },
+
+    getRuleMessage: function(avRule)
+    {
+        if (avRule === "number")
+            return "numeric ";
+        if (avRule === "email")
+            return "valid email ";
+       
+        return "";
+    },
+    
+    addValidationMessage: function (ele, avRule)
+    {
+        var dataType = avRule == undefined ? "" : avRule;
+     
+        if (ele.hasAttribute("data-av-message"))
+        {
+            return ele.getAttribute("data-av-message") + "</br>";
+        }
+        else
+        {
+            if (ele.nodeName.toLowerCase() == "input" && ele.getAttribute("type") == "text") // textbox
+            {
+                var elementName = ele.getAttribute("name");
+                return "Please enter a " + autoValidate.getRuleMessage(dataType) + "value for " + elementName + "</br>";
+            }
+            else // radio and dropdown
+            {
+                var elementName = ele.getAttribute("name");
+                return "Please select a value for " + elementName + "</br>";
+            }
+        }
     },
 
     showValidationModal: function ()
@@ -198,7 +281,7 @@ var autoValidate =
         function hideModal()
         {
             var avModal = document.querySelector(".autoValidate-modal");
-            if(avModal != null)
+            if (avModal != null)
                 avModal.remove();
         }
     }
