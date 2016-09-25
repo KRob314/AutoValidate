@@ -3,7 +3,9 @@
 
 var autoValidate =
 {
-    validationMessage: "",
+    _validationMessage: "",
+    Options: { RemoveBackgroundOnChange: true, RemoveBackgroundOnHover: false },
+
 
     init: function (formId)
     {
@@ -41,25 +43,33 @@ var autoValidate =
         var radioButtons = document.querySelectorAll("input[type=radio]"); // get all radio buttons
         var radioNames = []; // store unique names of radio buttons
 
-        radioButtons.forEach(function (radio)
+        console.log(radioButtons);
+
+        for (var i = 0; i >= radioButtons.length; i++)
         {
-            if (radio.hasAttribute("data-av"))
+            console.log(radioButtons[i]);
+
+            if(radioButtons[i].attributes.getNamedItem("data-av"))
             {
-                if (radioNames.indexOf(radio.getAttribute("name")) > -1)
+                if (radioButtons[i].hasAttribute("data-av"))
                 {
-                    // radiobutton name already added
-                }
-                else
-                {
-                    radioNames.push(radio.getAttribute("name"));
+                    if (radioNames.indexOf(radioButtons[i].getAttribute("name")) > -1)
+                    {
+                        // radiobutton name already added
+                    }
+                    else
+                    {
+                        radioNames.push(radioButtons[i].getAttribute("name"));
+                    }
                 }
             }
-        });
+        }
 
-        radioNames.forEach(function (radioName)
+
+        for (var i = 0; i = radioNames.length; i++)
         {
-            var radiosByGroup = document.getElementsByName(radioName);
-            var checkedValue = getCheckedValue(radioName);
+            var radiosByGroup = document.getElementsByName(radioNames[i]);
+            var checkedValue = getCheckedValue(radioNames[i]);
             var msg = "";
 
             if (checkedValue == null)
@@ -71,16 +81,15 @@ var autoValidate =
                 }
                 else
                 {
-                    msg += "Please select a radio button for " + radioName + "</br>";
+                    msg += "Please select a radio button for " + radioNames[i] + "</br>";
                 }
 
                 autoValidate.addBackgroundColor(radiosByGroup[0]);
                 autoValidate.removeBackgroundColor(radiosByGroup[0], this.modal);
             }
 
-            autoValidate.validationMessage += msg;
-
-        });
+            autoValidate._validationMessage += msg;
+        }
 
         function getCheckedValue(groupName)
         {
@@ -124,7 +133,7 @@ var autoValidate =
             }
         }
 
-        this.validationMessage += msg;
+        this._validationMessage += msg;
 
         function getValidationRule(attributeValue)
         {
@@ -151,7 +160,8 @@ var autoValidate =
                     isValid = isURL(element.value);
                     break;
                 case "between":
-                    isValid = isBetween(ruleValue);
+                    isValid = isBetween(element);
+                    console.log(isValid);
                     break;
             }
 
@@ -172,9 +182,17 @@ var autoValidate =
                 return re.test(str);
             }
 
-            function isBetween(valueBetween, elementValue)
+            function isBetween(ele)
             {
+                var betweenValue = ele.getAttribute("data-av-value").split(":");
+                var eleValue = ele.value;
 
+                console.log(eleValue + "\n" + betweenValue[0] + "\n" + betweenValue[1]);
+
+                if (Number(eleValue) > Number(betweenValue[0]) && Number(eleValue) < Number(betweenValue[1]))
+                    return true;
+                else
+                    return false;
             }
 
             if (isValid === false)
@@ -187,20 +205,20 @@ var autoValidate =
 
     },
 
-    getRuleMessage: function(avRule)
+    getRuleMessage: function (avRule)
     {
         if (avRule === "number")
             return "numeric ";
         if (avRule === "email")
             return "valid email ";
-       
+
         return "";
     },
-    
+
     addValidationMessage: function (ele, avRule)
     {
         var dataType = avRule == undefined ? "" : avRule;
-     
+
         if (ele.hasAttribute("data-av-message"))
         {
             return ele.getAttribute("data-av-message") + "</br>";
@@ -222,16 +240,16 @@ var autoValidate =
 
     showValidationModal: function ()
     {
-        if (this.validationMessage != "")
+        if (this._validationMessage != "")
         {
             var modal = new Modal({
-                content: "<p>" + this.validationMessage + "</p>",
+                content: "<p>" + this._validationMessage + "</p>",
                 maxWidth: 600,
                 overlay: false
             });
 
             modal.open();
-            autoValidate.validationMessage = "";
+            autoValidate._validationMessage = "";
         }
     },
 
@@ -249,30 +267,33 @@ var autoValidate =
 
     removeBackgroundColor: function (ele, modal)
     {
-        if (ele.nodeName.toLowerCase() === "select")
+        if (ele.nodeName.toLowerCase() === "select" || ele.getAttribute("type") == "text")
         {
-            ele.onmouseover = function ()
-            {
-                ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
-                hideModal();
-            }
-        }
-        else
-        {
-            if (ele.getAttribute("type") == "text")
+            if(this.Options.RemoveBackgroundOnHover === true)
             {
                 ele.onmouseover = function ()
                 {
                     ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
                     hideModal();
-                };
+                }
             }
-            else if (ele.getAttribute("type") == "radio")
+
+            if(this.Options.RemoveBackgroundOnChange === true)
+            {
+                ele.onchange= function()
+                {
+                    ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+                    hideModal();
+                }
+            }
+        }
+        else if (ele.getAttribute("type") == "radio")
+        {
+            if (this.Options.RemoveBackgroundOnHover === true)
             {
                 ele.parentElement.onmouseover = function ()
                 {
                     ele.parentElement.className = ele.parentElement.className.replace(/(?:^|\s)autoValidate-pulse(?!\S)/g, '');
-                    console.log(document.querySelectorAll(".autoValidate-modal"));
                     hideModal();
                 };
             }
@@ -280,9 +301,9 @@ var autoValidate =
 
         function hideModal()
         {
-            var avModal = document.querySelector(".autoValidate-modal");
-            if (avModal != null)
-                avModal.remove();
+                var avModal = document.querySelector(".autoValidate-modal");
+                if (avModal != null)
+                    avModal.remove();
         }
     }
 };

@@ -8,9 +8,9 @@
 }
 
 /* Modal Base CSS */
-.autoValidate-overlay { position: fixed; z-index: 9998; top: 0; left: 0; opacity: 0; width: 100%; height: 100%; -webkit-transition: 1ms opacity ease; -moz-transition: 1ms opacity ease; -ms-transition: 1ms opacity ease; -o-transition: 1ms opacity ease; transition: 1ms opacity ease; background: rgba(0,0,0,.6); }
+.autoValidate-overlay { position: fixed; z-index: 9998; top:0; left: 0; opacity: 0; width: 100%; height: 100%; -webkit-transition: 1ms opacity ease; -moz-transition: 1ms opacity ease; -ms-transition: 1ms opacity ease; -o-transition: 1ms opacity ease; transition: 1ms opacity ease; background: rgba(0,0,0,.6); }
 
-.autoValidate-modal { position: absolute; z-index: 9999; top: 10%; right: 0%; opacity: 0; width: 15%; padding: 20px 16px; -webkit-transition: 1ms opacity ease; -moz-transition: 1ms opacity ease; -ms-transition: 1ms opacity ease; -o-transition: 1ms opacity ease; transition: 1ms opacity ease; -webkit-transform: translate(-50%, -50%); -moz-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); transform: translate(-50%, -50%); -webkit-box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); -moz-box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); border-radius: 2px; background: #e57619; }
+.autoValidate-modal { position: absolute; z-index: 9999; top: 15%; right: 0%; opacity: 0; width: 15%; padding: 20px 16px; -webkit-transition: 1ms opacity ease; -moz-transition: 1ms opacity ease; -ms-transition: 1ms opacity ease; -o-transition: 1ms opacity ease; transition: 1ms opacity ease; -webkit-transform: translate(-50%, -50%); -moz-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); -o-transform: translate(-50%, -50%); transform: translate(-50%, -50%); -webkit-box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); -moz-box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); box-shadow: 10px 10px 5px 0px rgba(171,154,150,1); border-radius: 2px; background: #e57619; }
     .autoValidate-modal.autoValidate-open.autoValidate-anchored { top: 20px; -webkit-transform: translate(-50%, 0); -moz-transform: translate(-50%, 0); -ms-transform: translate(-50%, 0); -o-transform: translate(-50%, 0); transform: translate(-50%, 0); }
     .autoValidate-modal.autoValidate-open { opacity: 1; }
 
@@ -26,7 +26,7 @@
 
 .autoValidate-modal.fade-and-drop { top: -300%; opacity: 1; display: block; }
 
-    .autoValidate-modal.fade-and-drop.autoValidate-open { top: 10%; -webkit-transition: 500ms top 500ms ease; -moz-transition: 500ms top 500ms ease; -ms-transition: 500ms top 500ms ease; -o-transition: 500ms top 500ms ease; transition: 500ms top 500ms ease; }
+    .autoValidate-modal.fade-and-drop.autoValidate-open { top: 15%; -webkit-transition: 500ms top 500ms ease; -moz-transition: 500ms top 500ms ease; -ms-transition: 500ms top 500ms ease; -o-transition: 500ms top 500ms ease; transition: 500ms top 500ms ease; }
         .autoValidate-modal.fade-and-drop.autoValidate-open.autoValidate-anchored { -webkit-transition: 500ms top 500ms ease; -moz-transition: 500ms top 500ms ease; -ms-transition: 500ms top 500ms ease; -o-transition: 500ms top 500ms ease; transition: 500ms top 500ms ease; }
 
 .autoValidate-overlay.fade-and-drop.autoValidate-open { top: 0; -webkit-transition: 500ms opacity ease; -moz-transition: 500ms opacity ease; -ms-transition: 500ms opacity ease; -o-transition: 500ms opacity ease; transition: 500ms opacity ease; opacity: 1; }
