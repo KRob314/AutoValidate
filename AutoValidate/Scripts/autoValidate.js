@@ -4,7 +4,13 @@
 var autoValidate =
 {
     _validationMessage: "",
-    Options: { RemoveBackgroundOnChange: true, RemoveBackgroundOnHover: false },
+    rules: ["number", "email", "between", "url"],
+    Options:
+        {
+            AddBackgroundColor: true,
+            RemoveBackgroundOnChange: true,
+            RemoveBackgroundOnHover: false
+        },
 
 
     init: function (formId)
@@ -43,13 +49,13 @@ var autoValidate =
         var radioButtons = document.querySelectorAll("input[type=radio]"); // get all radio buttons
         var radioNames = []; // store unique names of radio buttons
 
-        console.log(radioButtons);
+        //  console.log(radioButtons);
 
         for (var i = 0; i >= radioButtons.length; i++)
         {
-            console.log(radioButtons[i]);
+            //  console.log(radioButtons[i]);
 
-            if(radioButtons[i].attributes.getNamedItem("data-av"))
+            if (radioButtons[i].attributes.getNamedItem("data-av"))
             {
                 if (radioButtons[i].hasAttribute("data-av"))
                 {
@@ -117,15 +123,13 @@ var autoValidate =
             {
                 var avRule = getValidationRule(inputs[i].getAttribute("data-av"));
 
-                if (avRule != "")
-                    checkValidationRule(avRule, inputs[i]);
+                msg += checkValidationRule(avRule, inputs[i]);
 
                 if (inputs[i].value == "" || inputs[i].selectedIndex == 0)
                 {
                     msg += autoValidate.addValidationMessage(inputs[i], avRule);
 
-                    this.addBackgroundColor(inputs[i]);
-                    this.removeBackgroundColor(inputs[i], this.modal);
+                    this.addUiIndicatiors(inputs[i], this.modal);
 
                     if (document.querySelector(".autoValidate"))
                         document.querySelector(".autoValidate").focus();
@@ -137,8 +141,7 @@ var autoValidate =
 
         function getValidationRule(attributeValue)
         {
-            var rules = ["number", "email", "between"];
-            if (rules.indexOf(attributeValue) > -1)
+            if (autoValidate.rules.indexOf(attributeValue) > -1)
                 return attributeValue
             else
                 return ""
@@ -147,6 +150,7 @@ var autoValidate =
         function checkValidationRule(rule, element, ruleValue)
         {
             var isValid = true;
+            var msg = "";
 
             switch (rule.toLowerCase())
             {
@@ -161,7 +165,6 @@ var autoValidate =
                     break;
                 case "between":
                     isValid = isBetween(element);
-                    console.log(isValid);
                     break;
             }
 
@@ -187,37 +190,33 @@ var autoValidate =
                 var betweenValue = ele.getAttribute("data-av-value").split(":");
                 var eleValue = ele.value;
 
-                console.log(eleValue + "\n" + betweenValue[0] + "\n" + betweenValue[1]);
-
                 if (Number(eleValue) > Number(betweenValue[0]) && Number(eleValue) < Number(betweenValue[1]))
-                    return true;
+                {
+                    isValid = true;
+                }
                 else
-                    return false;
+                {
+                    isValid = false;
+                    msg += autoValidate.getRuleMessage(ele, rule, betweenValue);
+
+                }
             }
 
             if (isValid === false)
             {
-                autoValidate.addValidationMessage(element, rule);
+                msg += autoValidate.getRuleMessage(element, rule);
+                autoValidate.addUiIndicatiors(element);
+                console.log(rule);
             }
 
-            return isValid;
+            return msg;
         }
 
     },
 
-    getRuleMessage: function (avRule)
-    {
-        if (avRule === "number")
-            return "numeric ";
-        if (avRule === "email")
-            return "valid email ";
-
-        return "";
-    },
-
     addValidationMessage: function (ele, avRule)
     {
-        var dataType = avRule == undefined ? "" : avRule;
+        var elementName = this.getElementName(ele);
 
         if (ele.hasAttribute("data-av-message"))
         {
@@ -227,15 +226,39 @@ var autoValidate =
         {
             if (ele.nodeName.toLowerCase() == "input" && ele.getAttribute("type") == "text") // textbox
             {
-                var elementName = ele.getAttribute("name");
-                return "Please enter a " + autoValidate.getRuleMessage(dataType) + "value for " + elementName + "</br>";
+                return "Please enter a value for " + elementName + "</br>";
             }
             else // radio and dropdown
             {
-                var elementName = ele.getAttribute("name");
                 return "Please select a value for " + elementName + "</br>";
             }
         }
+    },
+
+    getRuleMessage: function (ele, avRule, avRuleValue)
+    {
+        var msg = "";
+        var eleName = this.getElementName(ele);
+
+        switch (avRule)
+        {
+            case "number":
+                msg = "Please enter a numberic value for " + eleName + ".</br>";
+                break;
+            case "email":
+                msg = "Please enter a valid email address.</br>";
+                break;
+            case "url":
+                msg = "Please enter a valid URL.</br>";
+                break;
+            case "between":
+                msg = "Please enter a valid value between " + avRuleValue + " for " + eleName + ".</br>";
+                break;
+        }
+
+        autoValidate.addUiIndicatiors(ele);
+
+        return msg;
     },
 
     showValidationModal: function ()
@@ -253,58 +276,75 @@ var autoValidate =
         }
     },
 
-    addBackgroundColor: function (ele)
+    addUiIndicatiors: function (ele, modal)
     {
-        if (ele.getAttribute("type") == "radio")
+        if (this.Options.AddBackgroundColor === true)
         {
-            ele.parentElement.className += " autoValidate-pulse";
+            addBackgroundColor();
+            removeBackgroundColor();
         }
-        else
-        {
-            ele.className += " autoValidate";
-        }
-    },
 
-    removeBackgroundColor: function (ele, modal)
-    {
-        if (ele.nodeName.toLowerCase() === "select" || ele.getAttribute("type") == "text")
+        function addBackgroundColor()
         {
-            if(this.Options.RemoveBackgroundOnHover === true)
+            if (ele.getAttribute("type") == "radio")
             {
-                ele.onmouseover = function ()
+                ele.parentElement.className += " autoValidate-pulse";
+            }
+            else
+            {
+                ele.className += " autoValidate";
+            }
+        }
+
+        function removeBackgroundColor()
+        {
+            if (ele.nodeName.toLowerCase() === "select" || ele.getAttribute("type") == "text")
+            {
+                if (autoValidate.Options.RemoveBackgroundOnHover === true)
                 {
-                    ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
-                    hideModal();
+                    ele.onmouseover = function ()
+                    {
+                        ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+                        hideModal();
+                    }
+                }
+
+                if (autoValidate.Options.RemoveBackgroundOnChange === true)
+                {
+                    ele.onchange = function ()
+                    {
+                        ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
+                        hideModal();
+                    }
+                }
+            }
+            else if (ele.getAttribute("type") == "radio")
+            {
+                if (autoValidate.Options.RemoveBackgroundOnHover === true)
+                {
+                    ele.parentElement.onmouseover = function ()
+                    {
+                        ele.parentElement.className = ele.parentElement.className.replace(/(?:^|\s)autoValidate-pulse(?!\S)/g, '');
+                        hideModal();
+                    };
                 }
             }
 
-            if(this.Options.RemoveBackgroundOnChange === true)
+            function hideModal()
             {
-                ele.onchange= function()
-                {
-                    ele.className = ele.className.replace(/(?:^|\s)autoValidate(?!\S)/g, '');
-                    hideModal();
-                }
-            }
-        }
-        else if (ele.getAttribute("type") == "radio")
-        {
-            if (this.Options.RemoveBackgroundOnHover === true)
-            {
-                ele.parentElement.onmouseover = function ()
-                {
-                    ele.parentElement.className = ele.parentElement.className.replace(/(?:^|\s)autoValidate-pulse(?!\S)/g, '');
-                    hideModal();
-                };
-            }
-        }
-
-        function hideModal()
-        {
                 var avModal = document.querySelector(".autoValidate-modal");
                 if (avModal != null)
                     avModal.remove();
+            }
         }
+    },
+
+    getElementName: function (ele)
+    {
+        if (ele.getAttribute("name"))
+            return ele.getAttribute("name");
+        else
+            return "TBD";
     }
 };
 

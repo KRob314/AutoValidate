@@ -23,50 +23,56 @@
         <div class="row">
             <div class="col-md-6">
                 <!--<span class="help-block">Required <label class="label label-default">data-av=""</label></span>-->
-                <input type="text" placeholder="first name" name="first name" data-av="" /> 
+                <input type="text" placeholder="first name" name="first name" data-av=""   /> 
             </div>
 
             <div class="col-md-6">
                 <!--<span class="help-block">Required w/custom message <label class="label label-default"> data-av-message="Please enter your last name"</label></span>-->
-                <input type="text" placeholder="last name" name="last name" data-av="" data-av-message="Please enter your last name" />
+                <input type="text" placeholder="last name" name="last name" data-av="" data-av-message="Please enter your last name"   />
             </div>
         </div>
 
         <div class="row" style="margin-top:20px;">
             <div class="col-md-6">
                 <!--<span class="help-block">Number <label class="label label-default"> data-av="number"</label></span>-->
-                <input type="text" placeholder="age" name="age" data-av="number" />
+                <input type="text" placeholder="age" name="age" data-av="number"  />
             </div>
 
             <div class="col-md-6">
                 <!--<span class="help-block">Number between <label class="label label-default"> data-av="between" data-av-value="5000:50000"</label></span>-->
-                <input type="text" placeholder="income" name="income" data-av="between" data-av-value="5000:50000" />
+                <input type="text" placeholder="income" name="income" data-av="between" data-av-value="5000:50000"   />
             </div>
         </div>
      
         <div class="row" style="margin-top:20px">
             <div class="col-md-6">
                 <!--<span class="help-block">Email<label class="label label-default"> data-av="email"</label></span>-->
-                <input type="text" placeholder="email address" name="email address" data-av="email" /> 
+                <input type="text" placeholder="email address" name="email address" data-av="email"   /> 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6">              
+                <input type="text" placeholder="URL" name="" data-av="url"   /> 
+            </div>
+        </div>
+       
+        <div class="row" style="margin-top:20px">
+            <div class="col-md-2">
                 <!--<span class="help-block">Required & ignore first item <label class="label label-default"> data-av="" data-av-ignore="0"</label></span>-->
-                <select name="Icecream Flavours" data-av="" data-av-ignore="0">
+                <select name="Icecream Flavours" data-av="" data-av-ignore="0"   >
                     <option>---</option>
                     <option value="double chocolate">Double Chocolate</option>
                     <option value="vanilla">Vanilla</option>
                     <option value="strawberry">Strawberry</option>
                     <option value="caramel">Caramel</option>
                 </select>
+
             </div>
         </div>
-       
        
        <div class="row" style="margin-top:20px;">
            <div class="col-md-6">
                <!--<span class="help-block">Number <label class="label label-default"> data-av="number"</label></span>-->
-               <div style="margin:5px 15px 5px; display:block; width:150px ">
+               <div style="margin:5px 15px 5px; display:block; width:150px" >
                    <input type="radio" name="gender" value="male" data-av=""> Male<br>
                    <input type="radio" name="gender" value="female" data-av=""> Female<br>
                    <input type="radio" name="gender" value="other" data-av=""> Other
@@ -75,7 +81,7 @@
 
            <div class="col-md-6">
                <!--<span class="help-block">Number <label class="label label-default"> data-av="number"</label></span>-->
-               <div style="margin:5px 15px 5px; display:block; width:150px">
+               <div style="margin:5px 15px 5px; display:block; width:150px" >
                    <input type="radio" name="age" value="18-30" data-av="" data-av-message="Please select your age"> 18-30<br>
                    <input type="radio" name="age" value="31-50" data-av=""> 31-50<br>
                    <input type="radio" name="age" value="51+" data-av=""> 51+
