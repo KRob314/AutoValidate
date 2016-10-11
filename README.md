@@ -47,4 +47,5 @@ window.onload = function ()
 * `nummber`: check for numeric value
 * `email`: check for valid email (regex test for string@string.string)
 * `url:` checks for valid url 
+* `between:` checks for values between lower and upper bound 
 
