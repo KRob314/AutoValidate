@@ -24,8 +24,8 @@ var autoValidate =
                 buttons[i].addEventListener("click", function (e)
                 {
                     autoValidate.checkDropdowns();
-                    autoValidate.checkRadioButtons();
                     autoValidate.checkInputs();
+                  //  autoValidate.checkRadioButtons();
                     autoValidate.showValidationModal();
                 });
             }
@@ -49,37 +49,40 @@ var autoValidate =
         var radioButtons = document.querySelectorAll("input[type=radio]"); // get all radio buttons
         var radioNames = []; // store unique names of radio buttons
 
-        //  console.log(radioButtons);
+        console.log(radioButtons);
 
-        for (var i = 0; i >= radioButtons.length; i++)
+
+        for (var i = 0; i <= radioButtons.length - 1; i++)
         {
-            //  console.log(radioButtons[i]);
+            //console.log(radioButtons[i]);
 
-            if (radioButtons[i].attributes.getNamedItem("data-av"))
+            if (radioButtons[i].attributes.getNamedItem("data-av") )
             {
-                if (radioButtons[i].hasAttribute("data-av"))
+                //console.log(i);
+                if (radioNames.indexOf(radioButtons[i].getAttribute("name")) > -1)
                 {
-                    if (radioNames.indexOf(radioButtons[i].getAttribute("name")) > -1)
-                    {
-                        // radiobutton name already added
-                    }
-                    else
-                    {
-                        radioNames.push(radioButtons[i].getAttribute("name"));
-                    }
+                    // radiobutton name already added
+                   // alert('1');
+                }
+                else
+                {
+                    radioNames.push(radioButtons[i].getAttribute("name"));
+                   // alert('2');
                 }
             }
         }
 
-
-        for (var i = 0; i = radioNames.length; i++)
+        for (var x = 0; x <= radioNames.length; x++)
         {
-            var radiosByGroup = document.getElementsByName(radioNames[i]);
-            var checkedValue = getCheckedValue(radioNames[i]);
+            var radiosByGroup = document.getElementsByName(radioNames[x]);
+            var checkedValue = getCheckedValue(radioNames[x]);
             var msg = "";
+
+            
 
             if (checkedValue == null)
             {
+ 
                 if (radiosByGroup[0].attributes.getNamedItem("data-av-message") != null)
                 {
                     //console.log(radiosByGroup[0]);
@@ -87,11 +90,17 @@ var autoValidate =
                 }
                 else
                 {
-                    msg += "Please select a radio button for " + radioNames[i] + "</br>";
+                    msg += "Please select a radio button for " + radioNames[x] + "</br>";
                 }
 
-                autoValidate.addBackgroundColor(radiosByGroup[0]);
-                autoValidate.removeBackgroundColor(radiosByGroup[0], this.modal);
+                //autoValidate.addBackgroundColor(radiosByGroup[0]);
+                //autoValidate.removeBackgroundColor(radiosByGroup[0], this.modal);
+
+                console.log(x);
+                console.log(radioNames[0]);
+                console.log(radioNames[x]);
+               
+                this.addUiIndicatiors(document.getElementById(radioNames[x]), this.modal);
             }
 
             autoValidate._validationMessage += msg;
@@ -206,7 +215,7 @@ var autoValidate =
             {
                 msg += autoValidate.getRuleMessage(element, rule);
                 autoValidate.addUiIndicatiors(element);
-                console.log(rule);
+                //console.log(rule);
             }
 
             return msg;
